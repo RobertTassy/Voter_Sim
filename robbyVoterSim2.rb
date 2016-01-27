@@ -116,11 +116,16 @@ class World
     list_choice = gets.chomp.capitalize.strip
     case list_choice
     when "V"
-      puts "Registered voters: " + @voters
+      puts "Registered voters: "
+      # @voters.each do |voter|
+      #   puts voter.voter_name + voter.voter_party
+      # end
+      puts @voters
       puts ""
       main_menu
     when "P"
-      puts "Registered politicians: "+ @politicians
+      puts "Registered politicians: "
+      puts @politicians
       puts ""
       main_menu
     else
@@ -131,7 +136,6 @@ class World
     puts ""
     main_menu
   end
-
 
   def update
     menu_option = @menu_option
@@ -202,9 +206,20 @@ end
 
   def delete
     menu_option = @menu_option
-    p "you've selected delete!" if menu_option == "D"
+    puts "Delete (V)oters or (P)oliticians list?"
+    update_choice = gets.chomp.capitalize.strip
+    # p "you've selected update!" if menu_option == "U"
+    case update_choice
+    when "V"
+      update_voter
+    when "P"
+      update_politician
+    else
+      puts "Sorry, that selection does not exist."
+      puts ""
+      update
+    end
     puts ""
-    main_menu
   end
 
 end
@@ -216,6 +231,10 @@ class Voter < World
       @voter_party = voter_party
     end
 
+    def to_s
+      @voter_name + " - " + @voter_party
+    end
+
 end
 
 class Politician < World
@@ -224,6 +243,11 @@ class Politician < World
       @politician_name = politician_name
       @politician_party = politician_party
     end
+
+    def to_s
+      @politician_name + " - " + @politician_party
+    end
+
 end
 
 behold = World.new

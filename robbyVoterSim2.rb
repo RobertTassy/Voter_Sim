@@ -44,7 +44,7 @@ class World
     when "V"
       create_voter
     else
-      puts "Sorry, wrong selcetion."
+      puts "Sorry, wrong selection."
       puts ""
       create_what
     end

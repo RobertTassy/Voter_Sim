@@ -51,7 +51,7 @@ class World
   end
 
   def create_politician
-    puts "Name?"
+    puts "What is politician's name?"
     politician_name = gets.chomp.capitalize.strip
     puts "Which of the two parties for #{politician_name}:
     (D)emocract or (R)epublican"
@@ -77,7 +77,7 @@ class World
 
 
   def create_voter
-    puts "Name?"
+    puts "What is voter's name?"
     voter_name = gets.chomp.capitalize.strip
     puts "Which of the four parties for #{voter_name}:
     (L)iberal, (C)onservative, (T)ea Party,(S)ocialist, or (N)eutral"
@@ -112,14 +112,11 @@ class World
 
   def list
     menu_option = @menu_option
-    puts "View registered (V)oters or (P)oliticians list?"
+    puts "View registered (P)oliticians or (V)oters list?"
     list_choice = gets.chomp.capitalize.strip
     case list_choice
     when "V"
       puts "Registered voters: "
-      # @voters.each do |voter|
-      #   puts voter.voter_name + voter.voter_party
-      # end
       puts @voters
       puts ""
       main_menu
@@ -139,7 +136,7 @@ class World
 
   def update
     menu_option = @menu_option
-    puts "Update (V)oters or (P)oliticians list?"
+    puts "Update (P)oliticians or (V)oters list?"
     update_choice = gets.chomp.capitalize.strip
     # p "you've selected update!" if menu_option == "U"
     case update_choice
@@ -164,20 +161,31 @@ def update_voter
       puts "Update (N)ame or (P)arty?"
         name_or_party = gets.chomp.capitalize.strip
         if name_or_party == "N"
-          puts "What is the updated name?"
+          puts "What is the updated name of voter?"
             updated_name = gets.chomp.capitalize.strip
             voters.voter_name = updated_name
+            puts "Name is updated!"
+            puts ""
+            main_menu
         elsif name_or_party == "P"
-          puts "What is the updated party?"
+          puts "What is the updated party: (D)emocrat or (R)epublican?"
             updated_party = gets.chomp.capitalize.strip
             voters.voter_party = updated_party
+            puts "Part is updated!"
+            puts ""
+            main_menu
         else
           puts "Sorry, wrong selection. Rererouting..."
           update
         end
         main_menu
-      end
+      else
+      puts "Sorry but that selection does not exist."
+      puts "Type (L)ist to view all selections."
+      puts " "
+      main_menu
     end
+  end
 end
 
 def update_politician
@@ -186,43 +194,81 @@ def update_politician
   @politicians.each do |politicians|
     if politicians.politician_name == politician_update
       puts "Update (N)ame or (P)arty?"
-        name_or_party = gets.chomp.capitalize.strip
+      name_or_party = gets.chomp.capitalize.strip
         if name_or_party == "N"
           puts "What is the updated name?"
-            updated_name = gets.chomp.capitalize.strip
-            politicians.politician_name = updated_name
+          updated_name = gets.chomp.capitalize.strip
+          politicians.politician_name = updated_name
+          puts "Change to #{updated_name} was made."
         elsif name_or_party == "P"
-          puts "What is the updated party?"
+          puts "What is the updated party? (R)epublican or (D)emocract? "
+          updated_party = gets.chomp.capitalize.strip
+
+          while !valid_party?(updated_party)
+            puts "Sorry, wrong selection. (R)epublican or (D)emocract?"
             updated_party = gets.chomp.capitalize.strip
-            politicians.politician_party = updated_party
+          end
+
+          politicians.politician_party = translate_party(updated_party)
+          puts "Party change was made."
+          puts ""
         else
           puts "Sorry, wrong selection. Rererouting..."
+          puts ""
           update
         end
         main_menu
-      end
+    else
+      puts "Sorry but that selection does not exist."
+      main_menu
     end
+  end
+end
+
+def valid_party?(party_input)
+  array = ['D', 'R']
+  array.include? party_input
+end
+
+def translate_party(party_input)
+  if party_input == "D"
+    "Democrat"
+  elsif party_input == "R"
+    "Republican"
+  end
 end
 
   def delete
     menu_option = @menu_option
-    puts "Delete (V)oters or (P)oliticians list?"
-    update_choice = gets.chomp.capitalize.strip
-    # p "you've selected update!" if menu_option == "U"
-    case update_choice
+    puts "Delete (P)oliticians or (V)oters list?"
+    delete_choice = gets.chomp.capitalize.strip
+    case delete_choice
     when "V"
-      update_voter
+      p "delete voter here"
     when "P"
-      update_politician
+        puts "Delete whom?"
+        name_deleting = gets.chomp.capitalize.strip
+        @politicians.delete_if do |politician|
+          if politician.politician_name == name_deleting
+            puts "Deleted"
+            true
+          else
+            false
+          end
+        end
+        main_menu
     else
-      puts "Sorry, that selection does not exist."
+      puts "Sorry, that selection does not exist. Rerouting..."
       puts ""
       update
     end
+    puts "#{delete_choice} has been removed from the registry."
     puts ""
+    main_menu
   end
-
 end
+
+
 
 class Voter < World
   attr_accessor :voter_name, :voter_party

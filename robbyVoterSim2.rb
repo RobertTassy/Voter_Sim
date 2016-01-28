@@ -248,7 +248,7 @@ end
 def translate_party(party_input)
   if party_input == "L"
     "Liberal"
-  elsif party_input == "R"
+  elsif party_input == "C"
     "Conservative"
   elsif party_input == "T"
     "Tea Party"

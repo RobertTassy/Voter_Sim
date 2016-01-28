@@ -152,37 +152,39 @@ class World
     puts ""
   end
 
-
 def update_voter
   puts "Which voter to update?"
   voter_update = gets.chomp.capitalize.strip
-  @voters.each do |voters|
-    if voters.voter_name == voter_update
+  @voters.each do |voter|
+    if voter.voters_name == voter_update
       puts "Update (N)ame or (P)arty?"
-        name_or_party = gets.chomp.capitalize.strip
+      name_or_party = gets.chomp.capitalize.strip
         if name_or_party == "N"
-          puts "What is the updated name of voter?"
-            updated_name = gets.chomp.capitalize.strip
-            voters.voter_name = updated_name
-            puts "Name is updated!"
-            puts ""
-            main_menu
+          puts "What is the updated name?"
+          updated_name = gets.chomp.capitalize.strip
+          voter.voter_name = updated_name
+          puts "Change to #{voter_update} was made."
         elsif name_or_party == "P"
-          puts "What is the updated party: (D)emocrat or (R)epublican?"
+          puts "What is the updated party?
+          (L)iberal, (C)onservative, (T)ea Party, (S)ocialist, or (N)o Party"
+          updated_party = gets.chomp.capitalize.strip
+
+          while !voter_valid_party?(updated_party)
+            puts "Sorry, wrong selection. "
             updated_party = gets.chomp.capitalize.strip
-            voters.voter_party = updated_party
-            puts "Part is updated!"
-            puts ""
-            main_menu
+          end
+
+          voter.voter_party = !translate_party(updated_party)
+          puts "Party change was made."
+          puts ""
         else
           puts "Sorry, wrong selection. Rererouting..."
+          puts ""
           update
         end
         main_menu
-      else
+    else
       puts "Sorry but that selection does not exist."
-      puts "Type (L)ist to view all selections."
-      puts " "
       main_menu
     end
   end
@@ -191,14 +193,14 @@ end
 def update_politician
   puts "Which politician to update?"
   politician_update = gets.chomp.capitalize.strip
-  @politicians.each do |politicians|
-    if politicians.politician_name == politician_update
+  @politicians.each do |politician|
+    if politician.politician_name == politician_update
       puts "Update (N)ame or (P)arty?"
       name_or_party = gets.chomp.capitalize.strip
         if name_or_party == "N"
           puts "What is the updated name?"
           updated_name = gets.chomp.capitalize.strip
-          politicians.politician_name = updated_name
+          politician.politician_name = updated_name
           puts "Change to #{updated_name} was made."
         elsif name_or_party == "P"
           puts "What is the updated party? (R)epublican or (D)emocract? "
@@ -209,7 +211,7 @@ def update_politician
             updated_party = gets.chomp.capitalize.strip
           end
 
-          politicians.politician_party = translate_party(updated_party)
+          politician.politician_party = translate_party(updated_party)
           puts "Party change was made."
           puts ""
         else
@@ -230,11 +232,30 @@ def valid_party?(party_input)
   array.include? party_input
 end
 
+def voter_valid_party?(party_input)
+  array = ['L', 'C', 'T', 'S', 'N']
+  array.include? party_input
+end
+
 def translate_party(party_input)
   if party_input == "D"
     "Democrat"
   elsif party_input == "R"
     "Republican"
+  end
+end
+
+def translate_party(party_input)
+  if party_input == "L"
+    "Liberal"
+  elsif party_input == "R"
+    "Conservative"
+  elsif party_input == "T"
+    "Tea Party"
+  elsif party_input == "S"
+    "Socialist"
+  elsif party_input == "N"
+    "No Party affiliation"
   end
 end
 
@@ -244,7 +265,16 @@ end
     delete_choice = gets.chomp.capitalize.strip
     case delete_choice
     when "V"
-      p "delete voter here"
+      puts "Delete whom?"
+      name_deleting = gets.chomp.capitalize.strip
+      @voters.delete_if do |voter|
+        if voter.voter_name == name_deleting
+          puts "Deleted"
+          true
+        else
+          false
+        end
+      end
     when "P"
         puts "Delete whom?"
         name_deleting = gets.chomp.capitalize.strip
@@ -262,7 +292,6 @@ end
       puts ""
       update
     end
-    puts "#{delete_choice} has been removed from the registry."
     puts ""
     main_menu
   end

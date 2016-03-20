@@ -1,5 +1,4 @@
 #WHOA!
-#Added shit
 
 class World
 
